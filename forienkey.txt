@@ -1,0 +1,144 @@
+yesasvi teluguntla
+CREATE TABLE customers (
+  customer_id SERIAL PRIMARY KEY,
+  customer_name VARCHAR(50) NOT NULL,
+  customer_email VARCHAR(50) NOT NULL UNIQUE,
+  customer_phone VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE orders (
+  order_id SERIAL PRIMARY KEY,
+  order_date DATE NOT NULL,
+  customer_id INT NOT NULL,
+  order_total DECIMAL(10, 2) NOT NULL,
+  CONSTRAINT fk_orders_customers
+    FOREIGN KEY (customer_id)
+    REFERENCES customers(customer_id)
+    ON DELETE CASCADE
+);
+
+The above
+
+
+
+
+yesasvi teluguntla
+-- insert values into customers table
+INSERT INTO customers (customer_name, customer_email, customer_phone) 
+VALUES 
+('John Smith', 'john.smith@example.com', '555-1234'), 
+('Jane Doe', 'jane.doe@example.com', '555-5678'), 
+('Bob Johnson', 'bob.johnson@example.com', '555-9876');
+
+-- insert values into orders table
+INSERT INTO orders (order_date, customer_id, order_total) 
+VALUES 
+('2023-03-20', 1, 100.00), 
+('2023-03-20', 2, 250.00), 
+('2023-03-21', 1, 75.00);
+The above SQL code inserts sample values
+
+
+
+
+yesasvi teluguntla
+delete the primary key from customers
+You cannot delete a primary key constraint once it has been added to a table. However, you can drop the primary key column and recreate the table without it. Here's an example SQL code to achieve this:
+
+sql
+Copy code
+-- create a temporary table without the primary key column
+CREATE TEMPORARY TABLE customers_temp AS 
+SELECT customer_name, customer_email, customer_phone 
+FROM customers;
+
+-- drop the original customers table
+DROP TABLE customers;
+
+-- create a new customers table without the primary key column
+CREATE TABLE customers (
+  customer_name VARCHAR(50) NOT NULL,
+  customer_email VARCHAR(50) NOT NULL UNIQUE,
+  customer_phone VARCHAR(20) NOT NULL
+);
+
+-- copy the data from the temporary table to the new table
+INSERT INTO customers (customer_name, customer_email, customer_phone)
+SELECT customer_name, customer_email, customer_phone FROM customers_temp;
+
+-- drop the temporary table
+DROP TABLE customers_temp;
+Note that this code assumes that there are no foreign keys referencing the customer_id column, as dropping it would break those relationships. If there are foreign keys, you would need to drop those constraints first before dropping the customer_id column, and recreate them after the new customers table is created.
+
+
+
+
+yesasvi teluguntla
+how to get the vales using forigin key
+To get values from a table using a foreign key, you can use a SQL JOIN statement to combine the two tables based on their related columns. For example, if you have a foreign key constraint between the orders table and the customers table, you can retrieve the customer information for each order by joining the two tables on the customer_id column. Here's an example SQL query to do this:
+
+vbnet
+Copy code
+SELECT o.order_id, o.order_date, c.customer_name, o.order_total 
+FROM orders o 
+JOIN customers c ON o.customer_id = c.customer_id;
+This query retrieves the order_id, order_date, customer_name, and order_total columns from the orders and customers tables, joining them on the customer_id column. The result set will contain one row for each order, with the corresponding customer information from the customers table.
+
+
+
+
+yesasvi teluguntla
+in postgresql
+The example SQL query I provided earlier will work in PostgreSQL as well. Here's an example of how to use it in PostgreSQL:
+
+vbnet
+Copy code
+SELECT o.order_id, o.order_date, c.customer_name, o.order_total 
+FROM orders o 
+JOIN customers c ON o.customer_id = c.customer_id;
+This query retrieves the order_id, order_date, customer_name, and order_total columns from the orders and customers tables, joining them on the customer_id column. The result set will contain one row for each order, with the corresponding customer information from the customers table.
+
+
+
+
+yesasvi teluguntla
+ON DELETE CASCADE
+ON DELETE CASCADE is a foreign key option that can be specified when creating a foreign key constraint between two tables in SQL. It specifies that when a row in the referenced (parent) table is deleted, all related rows in the referencing (child) table should also be automatically deleted.
+
+In the example SQL code provided earlier, the ON DELETE CASCADE option is used in the orders table to define the foreign key constraint with the customers table. Specifically, it is used to specify that when a customer is deleted from the customers table, all orders associated with that customer should also be automatically deleted from the orders table.
+
+Here's an example of how the ON DELETE CASCADE option works in practice:
+
+sql
+Copy code
+-- Delete a customer and all their associated orders
+DELETE FROM customers 
+WHERE customer_id = 1;
+When you execute this SQL command, the database will automatically delete all rows in the orders table that are associated with the customer with customer_id = 1, because of the ON DELETE CASCADE option. This can be a very useful feature when you need to maintain referential integrity between related tables and ensure that all related data is properly cleaned up when a record is deleted.
+
+
+
+
+yesasvi teluguntla
+and what is the othe way inset of ON DELETE CASCADE
+The other way to specify the behavior of a foreign key constraint when a referenced row is deleted is to use the ON DELETE option with a different action, instead of CASCADE. Some of the commonly used actions are:
+
+RESTRICT: This option prevents the deletion of a referenced row if there are any related rows in the referencing table. In other words, it enforces referential integrity by preventing deletion of a row that is still referenced by other rows in other tables.
+SET NULL: This option sets the foreign key value in the referencing table to NULL when the referenced row is deleted. This means that the referencing rows will no longer reference the deleted row, but they will not be deleted themselves.
+SET DEFAULT: This option sets the foreign key value in the referencing table to the default value when the referenced row is deleted.
+Here's an example of how to create a foreign key constraint with the ON DELETE RESTRICT option:
+
+sql
+Copy code
+-- create orders table with foreign key constraint using ON DELETE RESTRICT
+CREATE TABLE orders (
+  order_id SERIAL PRIMARY KEY,
+  order_date DATE NOT NULL,
+  customer_id INT NOT NULL,
+  order_total DECIMAL(10, 2) NOT NULL,
+  CONSTRAINT fk_orders_customers
+    FOREIGN KEY (customer_id)
+    REFERENCES customers(customer_id)
+    ON DELETE RESTRICT
+);
+In this example, the ON DELETE RESTRICT option is used to specify that when a customer row is deleted from the customers table, the corresponding rows in the orders table should not be deleted, but instead the deletion should be restricted to ensure referential integrity.

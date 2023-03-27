@@ -1,0 +1,37 @@
+Sure, here's a line-by-line explanation of the code:
+
+sql
+Copy code
+CREATE SCHEMA my_new_schema;
+This statement creates a new schema called my_new_schema.
+
+sql
+Copy code
+DO $$ 
+DECLARE
+  table_name text;
+BEGIN
+This is the beginning of a DO block, which allows you to execute a series of SQL statements within a single transaction. The DECLARE section declares a variable called table_name, which will be used later in the loop.
+
+sql
+Copy code
+  FOR table_name IN SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname = 'public' LOOP
+This is a FOR loop that iterates over all tables in the public schema. The loop variable table_name takes the value of each tablename returned by the SELECT statement.
+
+sql
+Copy code
+    EXECUTE 'CREATE TABLE my_new_schema.' || table_name || ' (LIKE public.' || table_name || ' INCLUDING ALL)';
+This is an EXECUTE statement that creates a new table in the my_new_schema schema with the same structure as the original table in the public schema. The LIKE keyword copies the structure of the original table, and the INCLUDING ALL option ensures that all attributes, constraints, and indexes are copied to the new table.
+
+sql
+Copy code
+    EXECUTE 'INSERT INTO my_new_schema.' || table_name || ' SELECT * FROM public.' || table_name;
+This is another EXECUTE statement that inserts all data from the original table in the public schema into the new table in the my_new_schema schema.
+
+sql
+Copy code
+  END LOOP;
+END $$;
+This is the end of the FOR loop and the DO block.
+
+In summary, this code creates a new schema, then iterates over all tables in the public schema and creates new tables in the my_new_schema schema with the same structure and data. The EXECUTE statements are used to dynamically generate SQL statements based on the loop variable table_name. The DO block ensures that all statements are executed within a single transaction.

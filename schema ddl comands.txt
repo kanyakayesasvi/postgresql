@@ -1,0 +1,8 @@
+SELECT 'CREATE TABLE '||'actors (' 
+UNION ALL
+SELECT column_name || ' ' || data_type|| CASE is_nullable WHEN 'NO' THEN ' NOT NULL' ELSE '' END||','
+FROM information_schema.columns
+WHERE table_schema = 'public'
+AND   table_name = 'actors'
+UNION ALL
+SELECT ');'

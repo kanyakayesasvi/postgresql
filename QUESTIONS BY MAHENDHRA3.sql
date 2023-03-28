@@ -30,9 +30,11 @@ select a.first_name,a.last_name,  'actors' as people_type  from actors a where g
 except
 select d.first_name,d.last_name, 'directors' as people_type  from directors d
 
-select d.first_name,d.last_name, 'directors' as people_type  from directors d
+
+
+select d.first_name ,'directors' as people_type  from directors d
 except
-select a.first_name,a.last_name,  'actors' as people_type  from actors a where gender='F'
+select a.first_name, 'actors' as people_type  from actors a where gender='F'
 
 
 

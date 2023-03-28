@@ -186,7 +186,7 @@ update v_countries_ind_check set country_code='us' where city_name='india'
 -- SQL state: 44000
 
 
---using local and cassacade optopn on check
+--using local and cassacade optipn on check
 create view v_contries_v as
 select * from countries where city_name like 'v%';
 
@@ -319,7 +319,7 @@ REFRESH MATERIALIZED VIEW mv_directors_nodata_American;
 
 
 select * from mv_directors_nodata_American;
---concurrently llows us to update od the materilzes  view  with out locking it
+--concurrently allows us to update od the materilzes  view  with out locking it
 REFRESH MATERIALIZED VIEW concurrently  mv_directors_nodata_American;
 -- ERROR:  cannot refresh materialized view "public.mv_directors_nodata_american" concurrently
 -- HINT:  Create a unique index with no WHERE clause on one or more columns of the materialized view.

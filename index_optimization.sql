@@ -129,8 +129,37 @@ order by company_name
 --explain output formate
 
 
-	
 
+
+
+select m.movie_name
+from   movies m, movies_revenues mr
+where  m.movie_id = mr.movie_id
+and    mr.revenues_domestic > mr.revenues_international
+-- "Hash Join  (cost=1.89..3.80 rows=18 width=15)"
+-- "  Hash Cond: (m.movie_id = mr.movie_id)"
+-- "  ->  Seq Scan on movies m  (cost=0.00..1.53 rows=53 width=19)"
+-- "  ->  Hash  (cost=1.66..1.66 rows=18 width=4)"
+-- "        ->  Seq Scan on movies_revenues mr  (cost=0.00..1.66 rows=18 width=4)"
+-- "              Filter: (revenues_domestic > revenues_international)"
+select m.movie_name
+from   movies m, movies_revenues mr
+where  m.movie_id = mr.movie_id
+and    mr.revenues_domestic > mr.revenues_international
+union
+select m.movie_name
+from   movies m
+where  movie_id in (select movie_id
+                    from   movies_revenues mr
+                    where  mr.revenues_domestic > mr.revenues_international)
+
+
+-- "Hash Semi Join  (cost=1.89..3.76 rows=18 width=15)"
+-- "  Hash Cond: (m.movie_id = mr.movie_id)"
+-- "  ->  Seq Scan on movies m  (cost=0.00..1.53 rows=53 width=19)"
+-- "  ->  Hash  (cost=1.66..1.66 rows=18 width=4)"
+-- "        ->  Seq Scan on movies_revenues mr  (cost=0.00..1.66 rows=18 width=4)"
+-- "              Filter: (revenues_domestic > revenues_international)"
 
 
 

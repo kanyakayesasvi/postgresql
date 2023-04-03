@@ -80,16 +80,17 @@ $$
 
 create or replace trigger trg_temp_value_check_at_insert
 before insert on t_temp_log 
-for each row
+for each statement
 execute procedure fn_temp_value_check_at_insert();
 
 insert into t_temp_log(add_date,temprature) values
-('2022-06-04',55);
+('2022-01-03',50),('2022-05-04',-32) returning *;
 
-
+truncate t_temp_log;
 
 select * from t_temp_log;
 
+drop  trigger trg_temp_value_check_at_insert on t_temp_log;
 
 
 
@@ -371,7 +372,7 @@ execute procedure fn_evnt_auidit_ddl();
 select * from audit_ddl
 
 
-create table audit_ddl_test(
+create table audit_ddl_test1(
 i int
 );
 

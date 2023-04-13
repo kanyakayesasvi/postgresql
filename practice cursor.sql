@@ -71,3 +71,11 @@ select fn_get_emails_name('yesasvi');
 SELECT name, STRING_AGG(email, ',') as emails
 FROM yesasvi
 GROUP BY name;
+
+select * from yesasvi;
+
+select min(name),email from yesasvi group by 2 order by 1;
+
+
+
+

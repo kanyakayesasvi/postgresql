@@ -164,7 +164,7 @@ SELECT * FROM crosstab (
 
 --interactive clinte side pivort (gives the view)
 --cmd
-pgsql -h localhost -d Movies -U postgres
+psql -h localhost -d Movies -U postgres
 password:root
 select location, year, sum(raindays) from rainfalls group by 1,2 order by 1,2 \crosstabview
 

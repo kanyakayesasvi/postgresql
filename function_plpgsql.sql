@@ -73,6 +73,9 @@ select fn_my_sum_2_alias(2,4);
 
 --vairable initialization timming
 
+-- select pg_sleep()
+---perform  is null
+
 DO $$
 
 
@@ -171,8 +174,8 @@ select fn_my_sum_2_par(1,2);
 
 
 
-create or replace function fn_my_sum_2_par_2(in x integer ,in y integer, out z integer,out w integer)as
-$$
+create or replace function fn_my_sum_2_par_2(in x integer ,in y integer, out z integer,out w integer)
+ as $$
 begin
 		z:=x+y;
 		w:=x*y;
@@ -193,11 +196,13 @@ do $$
 		--another block
 		declare
 			counter integer:=0;
+-- 			i integer:=90;
 		begin 
 		counter :=counter+5;
 		raise notice 'the current value of subblock counter is %',counter;
 		raise notice 'the current value of parent counter is %',parent.counter;
 		end;
+-- 		raise notice '%',i;
 		end parent;
 		
 
@@ -398,7 +403,7 @@ begin
 	end loop;
 
 end;
-$$
+$$	
 language plpgsql
 
 
@@ -659,6 +664,9 @@ $$ language plpgsql;
 select fn_div_exception(4,2);
 
 select fn_div_exception(2,0);
+
+
+
 
 
 

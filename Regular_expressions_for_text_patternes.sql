@@ -70,6 +70,9 @@ select substring('The movie will  start  at 8 p.m  on Dec 10,2022.' from '.');--
 --all character
 select substring('The movie will  start  at 8 p.m  on Dec 10,2022.' from '.*');--similar to %
 
+SELECT substring('rakesh@gmail.com' FROM position('@' IN 'rakesh@gmail.com') + 1) AS domain_name
+
+
 --any character aftrt say movie
 
 select substring('The movie will  start  at 8 p.m  on Dec 10,2022.' from 'movie.+');

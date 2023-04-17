@@ -86,7 +86,7 @@ select *,lead(emp_id,1) over() from employees;
 
 select *, lag(emp_id,1) over() from employees;
 
-select *,row_number() over() from employees;
+select *,row_number() over(order by salary) from employees;
 
 
 
@@ -151,10 +151,43 @@ select id,name,row_number() over(partition by name) from dupli2) select id, name
 
 
 
+create table j1
+(
+	a integer,
+	b integer
+);
+
+create table j2
+(
+	a integer
+);
 
 
+insert into j1
+values
+(1,1),
+(2,2),
+(3,3),
+(4,null);
+
+insert into j2
+values
+(1),
+(2),
+(5);
+
+drop table j2;
+select * from j2
+select * from j1;
+
+select j1.a,j2.a from j1  inner join j2 on j1.a=j2.a;
+
+select j1.a,j2.a from j1  left join j2 on j1.a=j2.a;
+
+select j1.a,j2.a from j1  right join j2 on j1.a=j2.a;
 
 
+select j1.a,j2.a from j1  full outer  join j2 on j1.a=j2.a;
 
 
 
@@ -163,7 +196,7 @@ select id,name,row_number() over(partition by name) from dupli2) select id, name
 create table array_dt(
 	id integer,
 	name text[]
-
+	
 );
 
 
@@ -178,7 +211,7 @@ from array_dt;
 
 --- hstore datatype: hstore is a data type that allows you to store key-value pairs in a single column
 
-
+CREATE EXTENSION hstore;
 CREATE TABLE hstore_dt  (h hstore);
 
 INSERT INTO hstore_dt VALUES ('a=>b, c=>d');
@@ -359,6 +392,63 @@ CREATE TRIGGER check_salary_trigger
 BEFORE INSERT OR UPDATE ON employees
 FOR EACH ROW
 EXECUTE FUNCTION check_salary();
+
+
+
+
+
+create table employee123
+(
+emp_id integer,
+	name varchar(123)
+
+);
+
+
+create table es
+(
+	
+	emp_id integer,
+	salaray  numeric
+);
+
+
+insert into employee123
+values
+(1,'y'),
+(2,'e'),
+(3,'d'),
+(4,'f')
+returning * ;
+
+
+
+insert into es values
+(1,123),
+(2,234),
+(3,433)
+
+
+select e.emp_id,e.name,es.salaray
+from
+employee123 e
+join es es using(emp_id);
+
+
+
+
+
+
+select emp_id from employee123 where emp_id  not in(select emp_id from es);
+
+
+
+
+select  emp_id from employee123
+except
+select emp_id from es;
+
+
 
 
 
